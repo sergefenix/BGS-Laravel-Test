@@ -6,13 +6,15 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\Renderable;
 use App\Http\Requests\StoreParticipant;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
+use App\Mail\NewParticipant;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Participant;
 use Exception;
 use App\Event;
+use App\User;
 
 class ParticipantController extends Controller
 {
@@ -52,8 +54,8 @@ class ParticipantController extends Controller
             'event_id' => $event_id,
         ]);
 
-        Queue::push(LogMessageController::class,
-            ['message' => "New Participant: {$participant->name} | Email: {$participant->email} | Time: " . time()]);
+        $user = User::first();
+        Mail::to($user)->queue(new NewParticipant($participant));
 
         return redirect()->route('participants');
     }

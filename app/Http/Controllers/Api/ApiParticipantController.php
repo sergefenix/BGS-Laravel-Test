@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Mail\NewParticipant;
+use App\User;
 use Illuminate\Contracts\Foundation\Application;
 use App\Http\Controllers\LogMessageController;
 use Illuminate\Contracts\Support\Renderable;
@@ -9,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Http\Requests\StoreParticipant;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -45,8 +48,8 @@ class ApiParticipantController extends Controller
             'event_id' => $event_id,
         ]);
 
-        Queue::push(LogMessageController::class,
-            ['message' => "New Participant: {$participant->name} | Email: {$participant->email} | Time: " . time()]);
+        $user = User::first();
+        Mail::to($user)->queue(new NewParticipant($participant));
 
         return response()->json($participant, 201);
     }
