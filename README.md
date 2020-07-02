@@ -38,4 +38,5 @@
 - mv .env.example .env
 - composer i
 - docker-compose up -d
+- php artisan serve
 - composer test
