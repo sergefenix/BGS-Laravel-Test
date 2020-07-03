@@ -8,6 +8,8 @@ use App\Repositories\ParticipantRepository;
 use Illuminate\Contracts\View\Factory;
 use App\Repositories\EventRepository;
 use Illuminate\Http\RedirectResponse;
+use App\Repositories\CityRepository;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Exception;
 use App\Event;
@@ -25,15 +27,25 @@ class EventController extends Controller
     private $participantRepository;
 
     /**
+     * @var CityRepository
+     */
+    private $cityRepository;
+
+    /**
      * EventController constructor.
      *
      * @param EventRepository       $eventRepository
      * @param ParticipantRepository $participantRepository
+     * @param CityRepository        $cityRepository
      */
-    public function __construct(EventRepository $eventRepository, ParticipantRepository $participantRepository)
-    {
+    public function __construct(
+        EventRepository $eventRepository,
+        ParticipantRepository $participantRepository,
+        CityRepository $cityRepository
+    ) {
         $this->eventRepository = $eventRepository;
         $this->participantRepository = $participantRepository;
+        $this->cityRepository = $cityRepository;
     }
 
     /**
@@ -56,6 +68,53 @@ class EventController extends Controller
         $participants = $this->participantRepository->where('event_id', $event->id);
 
         return view('event.show', compact(['event', 'participants']));
+    }
+
+    /**
+     * @return Application|Factory|View
+     */
+    public function create(): Renderable
+    {
+        $cities = $this->cityRepository->all();
+
+        return view('event.create', compact(['cities']));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $this->eventRepository->create($request->input());
+
+        return redirect()->route('events');
+    }
+
+    /**
+     * @param Event $event
+     *
+     * @return Application|Factory|View
+     */
+    public function edit(Event $event): Renderable
+    {
+        $cities = $this->cityRepository->all();
+
+        return view('event.edit', compact('event', 'cities'));
+    }
+
+    /**
+     * @param Event   $event
+     * @param Request $request
+     *
+     * @return Application|Factory|View
+     */
+    public function update(Event $event, Request $request): Renderable
+    {
+        $event = $this->eventRepository->update($event, $request->input());
+
+        return view('event.show', compact(['event']));
     }
 
     /**

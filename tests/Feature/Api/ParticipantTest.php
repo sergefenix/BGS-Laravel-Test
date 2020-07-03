@@ -22,12 +22,14 @@ class ParticipantTest extends TestCase
 
         $this->json('POST', '/api/participants/store', $payload, $headers)
             ->assertStatus(201)
-            ->assertJson([
-                'name'     => 'Name One',
-                'surname'  => 'Surname One',
-                'email'    => 'first@gmail.com',
-                'event_id' => Event::first()->name,
-            ]);
+            ->assertJson(
+                [
+                    'name'     => 'Name One',
+                    'surname'  => 'Surname One',
+                    'email'    => 'first@gmail.com',
+                    'event_id' => Event::first()->name,
+                ]
+            );
     }
 
     public function testParticipantsAreUniqEmail(): void
@@ -44,24 +46,28 @@ class ParticipantTest extends TestCase
         $this->json('POST', '/api/participants/store', $payload, $headers);
         $this->json('POST', '/api/participants/store', $payload, $headers)
             ->assertStatus(422)
-            ->assertJson([
-                "message" => "The given data was invalid.",
-                'errors'  => [
-                    'email' => ['Such email already exists'],
+            ->assertJson(
+                [
+                    "message" => "The given data was invalid.",
+                    'errors'  => [
+                        'email' => ['Such email already exists'],
+                    ]
                 ]
-            ]);
+            );
     }
 
     public function testsParticipantsAreUpdatedCorrectly(): void
     {
         $headers = ['Authorization' => "Bearer $this->token"];
 
-        $participant = factory(Participant::class)->create([
-            'name'     => 'Name Two',
-            'surname'  => 'Surname Two',
-            'event_id' => Event::first()->id,
-            'email'    => 'second@gmail.com',
-        ]);
+        $participant = factory(Participant::class)->create(
+            [
+                'name'     => 'Name Two',
+                'surname'  => 'Surname Two',
+                'event_id' => Event::first()->id,
+                'email'    => 'second@gmail.com',
+            ]
+        );
 
         $payload = [
             'name'     => 'TestName',
@@ -72,45 +78,53 @@ class ParticipantTest extends TestCase
 
         $this->json('POST', "/api/participants/$participant->id/update", $payload, $headers)
             ->assertStatus(200)
-            ->assertJson([
-                'id'       => $participant->id,
-                'name'     => 'TestName',
-                'surname'  => 'TestSurname',
-                'email'    => 'test@gmail.com',
-                'event_id' => Event::first()->name,
-            ]);
+            ->assertJson(
+                [
+                    'id'       => $participant->id,
+                    'name'     => 'TestName',
+                    'surname'  => 'TestSurname',
+                    'email'    => 'test@gmail.com',
+                    'event_id' => Event::first()->name,
+                ]
+            );
     }
 
     public function testsParticipantAreDeletedCorrectly(): void
     {
         $headers = ['Authorization' => "Bearer $this->token"];
-        $participant = factory(Participant::class)->create([
-            'name'     => 'Name Three',
-            'surname'  => 'Surname Three',
-            'event_id' => Event::first()->id,
-            'email'    => 'third@gmail.com',
-        ]);
+        $participant = factory(Participant::class)->create(
+            [
+                'name'     => 'Name Three',
+                'surname'  => 'Surname Three',
+                'event_id' => Event::first()->id,
+                'email'    => 'third@gmail.com',
+            ]
+        );
 
         $this->json('DELETE', "/api/participants/$participant->id/delete", [], $headers)
             ->assertStatus(204);
     }
 
-    public function testParticipantsAreListedCorrectly(): void
+    public function testParticipantsAreListedWhitSearchCorrectly(): void
     {
-        factory(Participant::class)->create([
-            'name'     => 'Name Fore',
-            'surname'  => 'Surname Fore',
-            'event_id' => Event::first()->id,
-            'email'    => 'foud@gmail.com',
-        ]);
+        $event_id = Event::first()->id;
+
+        factory(Participant::class)->create(
+            [
+                'name'     => 'Name Fore',
+                'surname'  => 'Surname Fore',
+                'event_id' => $event_id,
+                'email'    => 'foud@gmail.com',
+            ]
+        );
+
+        $count = Participant::where('event_id', $event_id)->count();
 
         $headers = ['Authorization' => "Bearer $this->token"];
 
-        $this->json('GET', '/api/participants', [], $headers)
+        $this->json('GET', "/api/participants?event_id={$event_id}", [], $headers)
             ->assertStatus(200)
-            ->assertJsonStructure([
-                '*' => ['id', 'name', 'surname', 'email', 'event_id', 'created_at', 'updated_at', 'id'],
-            ]);
+            ->assertJsonCount($count, 'data');
     }
 
 }

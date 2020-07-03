@@ -41,8 +41,11 @@ class ParticipantController extends Controller
      * @param EventRepository       $eventRepository
      * @param UserRepository        $userRepository
      */
-    public function __construct(ParticipantRepository $participantRepository, EventRepository $eventRepository, UserRepository $userRepository)
-    {
+    public function __construct(
+        ParticipantRepository $participantRepository,
+        EventRepository $eventRepository,
+        UserRepository $userRepository
+    ) {
         $this->participantRepository = $participantRepository;
         $this->eventRepository = $eventRepository;
         $this->userRepository = $userRepository;
@@ -51,19 +54,22 @@ class ParticipantController extends Controller
     /**
      * Show the application dashboard.
      *
+     * @param Request $request
+     *
      * @return Renderable
      */
-    public function index(): Renderable
+    public function index(Request $request): Renderable
     {
-        $participants = $this->participantRepository->paginate(10);
+        $participants = $this->participantRepository->paginateWhereEvent($request->input(), 10);
+        $events = $this->eventRepository->all();
 
-        return view('participant.index', compact(['participants']));
+        return view('participant.index', compact(['participants', 'events']));
     }
 
     /**
      * @return Application|Factory|View
      */
-    public function create()
+    public function create(): Renderable
     {
         $events = $this->eventRepository->all();
 
@@ -90,7 +96,7 @@ class ParticipantController extends Controller
      *
      * @return Application|Factory|View
      */
-    public function edit(Participant $participant)
+    public function edit(Participant $participant): Renderable
     {
         $events = $this->eventRepository->all();
 
@@ -103,7 +109,7 @@ class ParticipantController extends Controller
      *
      * @return Application|Factory|View
      */
-    public function update(Participant $participant, Request $request)
+    public function update(Participant $participant, Request $request): Renderable
     {
         $participant = $this->participantRepository->update($participant, $request->input());
 
@@ -128,7 +134,7 @@ class ParticipantController extends Controller
      *
      * @return Application|Factory|View
      */
-    public function show(Participant $participant)
+    public function show(Participant $participant): Renderable
     {
         return view('participant.show', compact(['participant']));
     }

@@ -21,11 +21,13 @@ class EventRepository extends BaseRepository
      */
     public function create(array $data)
     {
-        return Event::create([
-            'name'       => $data['name'],
-            'date_start' => $data['date_start'],
-            'city_id'    => $data['city_id']
-        ]);
+        return Event::create(
+            [
+                'name'       => $data['name'],
+                'date_start' => $data['date_start'],
+                'city_id'    => $data['city_id']
+            ]
+        );
     }
 
     /**
@@ -36,11 +38,13 @@ class EventRepository extends BaseRepository
      */
     public function update(Event $event, array $data): Event
     {
-        $event->fill([
-            'name'       => $data['name'],
-            'date_start' => $data['date_start'],
-            'city_id'    => $data['city_id']
-        ]);
+        $event->fill(
+            [
+                'name'       => $data['name'],
+                'date_start' => $data['date_start'],
+                'city_id'    => $data['city_id']
+            ]
+        );
 
         $event->save();
 

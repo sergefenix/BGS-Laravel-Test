@@ -47,11 +47,13 @@ class ParticipantController extends Controller
     /**
      * Show the application dashboard.
      *
+     * @param Request $request
+     *
      * @return Participant[]|Renderable|Collection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->participantRepository->all();
+        return $this->participantRepository->paginateWhereEvent($request->input(), 10);
     }
 
     /**

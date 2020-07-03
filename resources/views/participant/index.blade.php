@@ -15,7 +15,22 @@
                 @endif
                 <a href="{{ route('participants.create') }}">
                     <button type="button" class="btn btn-primary">Create</button>
-                </a><br><br>
+                </a>
+
+                <div class="dropdown float-right">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Events
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="?">All</a>
+                        @foreach($events as $event)
+                            <a class="dropdown-item" href="?event_id={{$event->id}}">{{$event->name}}</a>
+                        @endforeach
+                    </div>
+                </div>
+                <br><br>
+
                 <div class="card">
                     <div class="card-header">Participants</div>
                     <div class="content">
