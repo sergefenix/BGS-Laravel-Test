@@ -9,13 +9,13 @@ use App\Http\Requests\StoreParticipant;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use App\Repositories\EventRepository;
-use Illuminate\Support\Facades\Mail;
+use App\Repositories\UserRepository;
 use App\Mail\NewParticipant;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Jobs\SendMail;
 use App\Participant;
 use Exception;
-use App\User;
 
 class ParticipantController extends Controller
 {
@@ -30,15 +30,22 @@ class ParticipantController extends Controller
     private $eventRepository;
 
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
      * ParticipantController constructor.
      *
      * @param ParticipantRepository $participantRepository
      * @param EventRepository       $eventRepository
+     * @param UserRepository        $userRepository
      */
-    public function __construct(ParticipantRepository $participantRepository, EventRepository $eventRepository)
+    public function __construct(ParticipantRepository $participantRepository, EventRepository $eventRepository, UserRepository $userRepository)
     {
         $this->participantRepository = $participantRepository;
         $this->eventRepository = $eventRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -72,8 +79,8 @@ class ParticipantController extends Controller
     {
         $participant = $this->participantRepository->create($request->input());
 
-        $user = User::first();
-        Mail::to($user)->queue(new NewParticipant($participant));
+        $user = $this->userRepository->first();
+        SendMail::dispatch(new NewParticipant($participant), $user);
 
         return redirect()->route('participants');
     }

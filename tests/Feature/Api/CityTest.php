@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature\Api;
 
 use App\City;
 use Tests\TestCase;

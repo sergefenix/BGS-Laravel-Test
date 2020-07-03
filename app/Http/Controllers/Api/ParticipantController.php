@@ -9,16 +9,16 @@ use App\Repositories\ParticipantRepository;
 use App\Http\Requests\StoreParticipant;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Mail;
+use App\Repositories\UserRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use App\Mail\NewParticipant;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Jobs\SendMail;
 use App\Participant;
 use Exception;
-use App\User;
 
 class ParticipantController extends Controller
 {
@@ -28,13 +28,20 @@ class ParticipantController extends Controller
     private $participantRepository;
 
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
      * ParticipantController constructor.
      *
      * @param ParticipantRepository $participantRepository
+     * @param UserRepository        $userRepository
      */
-    public function __construct(ParticipantRepository $participantRepository)
+    public function __construct(ParticipantRepository $participantRepository, UserRepository $userRepository)
     {
         $this->participantRepository = $participantRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -56,8 +63,8 @@ class ParticipantController extends Controller
     {
         $participant = $this->participantRepository->create($request->input());
 
-        $user = User::first();
-        Mail::to($user)->queue(new NewParticipant($participant));
+        $user = $this->userRepository->first();
+        SendMail::dispatch(new NewParticipant($participant), $user);
 
         return response()->json($participant, Response::HTTP_CREATED);
     }
