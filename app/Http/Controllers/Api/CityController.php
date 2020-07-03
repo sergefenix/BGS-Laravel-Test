@@ -7,6 +7,7 @@ use Illuminate\Contracts\Support\Renderable;
 use App\Http\Controllers\Controller;
 use App\Repositories\CityRepository;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use App\City;
 
 class CityController extends Controller
@@ -45,6 +46,6 @@ class CityController extends Controller
     {
         $this->cityRepository->delete($city->id);
 
-        return response()->json(null, 204);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

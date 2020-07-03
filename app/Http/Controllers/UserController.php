@@ -34,7 +34,7 @@ class UserController extends Controller
     {
         $users = $this->userRepository->paginate(10);
 
-        return view('users', compact(['users']));
+        return view('users.index', compact(['users']));
     }
 
     /**

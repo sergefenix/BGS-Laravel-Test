@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\UserRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use App\User;
 
 class UserController extends Controller
@@ -45,6 +46,6 @@ class UserController extends Controller
     {
         $this->userRepository->delete($user->id);
 
-        return response()->json(null, 204);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

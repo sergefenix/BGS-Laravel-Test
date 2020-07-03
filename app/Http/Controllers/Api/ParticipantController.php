@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use App\Mail\NewParticipant;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -58,7 +59,7 @@ class ParticipantController extends Controller
         $user = User::first();
         Mail::to($user)->queue(new NewParticipant($participant));
 
-        return response()->json($participant, 201);
+        return response()->json($participant, Response::HTTP_CREATED);
     }
 
     /**
@@ -71,7 +72,7 @@ class ParticipantController extends Controller
     {
         $participant = $this->participantRepository->update($participant, $request->input());
 
-        return response()->json($participant, 200);
+        return response()->json($participant, Response::HTTP_OK);
     }
 
     /**
@@ -84,7 +85,7 @@ class ParticipantController extends Controller
     {
         $this->participantRepository->delete($participant->id);
 
-        return response()->json(null, 204);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 
     /**

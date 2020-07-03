@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\CityRepository;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\RedirectResponse;
+use App\Repositories\CityRepository;
+use App\City;
 
 class CityController extends Controller
 {
@@ -31,6 +33,18 @@ class CityController extends Controller
     {
         $cities = $this->cityRepository->paginate(10);
 
-        return view('cities', compact(['cities']));
+        return view('cities.index', compact(['cities']));
+    }
+
+    /**
+     * @param City $city
+     *
+     * @return RedirectResponse
+     */
+    public function delete(City $city): RedirectResponse
+    {
+        $this->cityRepository->delete($city->id);
+
+        return redirect()->route('cities');
     }
 }

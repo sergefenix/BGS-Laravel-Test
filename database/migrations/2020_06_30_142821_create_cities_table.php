@@ -13,7 +13,7 @@ class CreateCitiesTable extends Migration
      */
     public function up(): void
     {
-        Schema::create('cities', function (Blueprint $table) {
+        Schema::create('cities', static function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();

@@ -50,7 +50,7 @@ class ParticipantController extends Controller
     {
         $participants = $this->participantRepository->paginate(10);
 
-        return view('participant.participants', compact(['participants']));
+        return view('participant.index', compact(['participants']));
     }
 
     /**

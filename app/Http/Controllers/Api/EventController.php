@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\EventRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Exception;
 use App\Event;
 
@@ -65,6 +66,6 @@ class EventController extends Controller
     {
         $this->eventRepository->delete($event->id);
 
-        return response()->json(null, 204);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

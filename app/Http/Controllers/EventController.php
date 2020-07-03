@@ -43,7 +43,7 @@ class EventController extends Controller
     {
         $events = $this->eventRepository->paginate(5);
 
-        return view('event.events', compact(['events']));
+        return view('event.index', compact(['events']));
     }
 
     /**
