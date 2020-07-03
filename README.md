@@ -40,4 +40,5 @@
 - docker-compose up -d
 - php artisan key:generate
 - php artisan serve
+- php artisan migrate
 - composer test
