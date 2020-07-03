@@ -2,27 +2,33 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Mail\NewParticipant;
-use App\User;
 use Illuminate\Contracts\Foundation\Application;
-use App\Http\Controllers\LogMessageController;
+use App\Repositories\ParticipantRepository;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Collection;
 use App\Http\Requests\StoreParticipant;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Queue;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use App\Mail\NewParticipant;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Participant;
 use Exception;
-use App\Event;
+use App\User;
 
-class ApiParticipantController extends Controller
+class ParticipantController extends Controller
 {
+    private $participantRepository;
+    private $eventRepository;
+
+    public function __construct(ParticipantRepository $participantRepository)
+    {
+        $this->participantRepository = $participantRepository;
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -30,7 +36,7 @@ class ApiParticipantController extends Controller
      */
     public function index()
     {
-        return Participant::all();
+        return $this->participantRepository->all();
     }
 
     /**
@@ -40,13 +46,7 @@ class ApiParticipantController extends Controller
      */
     public function store(StoreParticipant $request): JsonResponse
     {
-        $event_id = Event::find($request->input('event_id'))->id;
-        $participant = Participant::create([
-            'name'     => $request->input('name'),
-            'surname'  => $request->input('surname'),
-            'email'    => $request->input('email'),
-            'event_id' => $event_id,
-        ]);
+        $participant = $this->participantRepository->create($request->input());
 
         $user = User::first();
         Mail::to($user)->queue(new NewParticipant($participant));
@@ -62,15 +62,7 @@ class ApiParticipantController extends Controller
      */
     public function update(Participant $participant, Request $request)
     {
-        $event_id = Event::find($request->input('event_id'))->id;
-        $participant->fill([
-            'name'     => $request->input('name'),
-            'surname'  => $request->input('surname'),
-            'email'    => $request->input('email'),
-            'event_id' => $event_id
-        ]);
-
-        $participant->save();
+        $participant = $this->participantRepository->update($participant, $request->input());
 
         return response()->json($participant, 200);
     }
@@ -83,7 +75,7 @@ class ApiParticipantController extends Controller
      */
     public function delete(Participant $participant)
     {
-        $participant->delete();
+        $this->participantRepository->delete($participant->id);
 
         return response()->json(null, 204);
     }

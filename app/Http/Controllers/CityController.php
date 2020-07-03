@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\City;
+use App\Repositories\CityRepository;
 use Illuminate\Contracts\Support\Renderable;
 
 class CityController extends Controller
 {
+    private $cityRepository;
+
+    public function __construct(CityRepository $cityRepository)
+    {
+        $this->cityRepository = $cityRepository;
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -14,7 +21,8 @@ class CityController extends Controller
      */
     public function index(): Renderable
     {
-        $cities = City::paginate(10);
+        $cities = $this->cityRepository->paginate(10);
+
         return view('cities', compact(['cities']));
     }
 }

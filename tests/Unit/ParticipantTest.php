@@ -47,7 +47,7 @@ class ParticipantTest extends TestCase
             ->assertJson([
                 "message" => "The given data was invalid.",
                 'errors'  => [
-                    'email' => ['A email is unique'],
+                    'email' => ['Such email already exists'],
                 ]
             ]);
     }

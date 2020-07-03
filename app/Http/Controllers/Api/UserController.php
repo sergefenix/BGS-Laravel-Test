@@ -6,7 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Collection;
 
-class ApiUserController extends Controller
+class UserController extends Controller
 {
     /**
      * Show the application dashboard.

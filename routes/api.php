@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\ApiParticipantController;
+use App\Http\Controllers\Api\ParticipantController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Api\ApiEventController;
-use App\Http\Controllers\Api\ApiCityController;
-use App\Http\Controllers\Api\ApiUserController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\CityController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,16 +26,16 @@ Route::group(['middleware' => 'auth:api'], static function () {
 
     Route::post('logout', [LoginController::class, 'logout']);
 
-    Route::get('cities', [ApiCityController::class, 'index']);
-    Route::get('users', [ApiUserController::class, 'index']);
+    Route::get('cities', [CityController::class, 'index']);
+    Route::get('users', [UserController::class, 'index']);
 
-    Route::get('events', [ApiEventController::class, 'index']);
-    Route::get('events/{event}/show', [ApiEventController::class, 'show']);
-    Route::delete('events/{event}/delete', [ApiEventController::class, 'delete']);
+    Route::get('events', [EventController::class, 'index']);
+    Route::get('events/{event}/show', [EventController::class, 'show']);
+    Route::delete('events/{event}/delete', [EventController::class, 'delete']);
 
-    Route::get('participants', [ApiParticipantController::class, 'index']);
-    Route::post('participants/store', [ApiParticipantController::class, 'store']);
-    Route::post('participants/{participant}/update', [ApiParticipantController::class, 'update']);
-    Route::delete('participants/{participant}/delete', [ApiParticipantController::class, 'delete']);
-    Route::get('participants/{participant}/show', [ApiParticipantController::class, 'show']);
+    Route::get('participants', [ParticipantController::class, 'index']);
+    Route::post('participants/store', [ParticipantController::class, 'store']);
+    Route::post('participants/{participant}/update', [ParticipantController::class, 'update']);
+    Route::delete('participants/{participant}/delete', [ParticipantController::class, 'delete']);
+    Route::get('participants/{participant}/show', [ParticipantController::class, 'show']);
 });

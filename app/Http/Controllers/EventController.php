@@ -4,18 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\Renderable;
+use App\Repositories\ParticipantRepository;
 use Illuminate\Contracts\View\Factory;
+use App\Repositories\EventRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use App\Participant;
 use Exception;
 use App\Event;
 
 class EventController extends Controller
 {
+    private $eventRepository;
+    private $participantRepository;
+
+    public function __construct(EventRepository $eventRepository, ParticipantRepository $participantRepository)
+    {
+        $this->eventRepository = $eventRepository;
+        $this->participantRepository = $participantRepository;
+    }
+
     public function index(): Renderable
     {
-        $events = Event::paginate(5);
+        $events = $this->eventRepository->paginate(5);
+
         return view('event.events', compact(['events']));
     }
 
@@ -26,7 +37,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        $participants = Participant::where('event_id', $event->id)->paginate(5);
+        $participants = $this->participantRepository->where('event_id', $event->id);
 
         return view('event.show', compact(['event', 'participants']));
     }
@@ -39,7 +50,7 @@ class EventController extends Controller
      */
     public function delete(Event $event): RedirectResponse
     {
-        $event->delete();
+        $this->eventRepository->delete($event->id);
 
         return redirect()->route('events');
     }

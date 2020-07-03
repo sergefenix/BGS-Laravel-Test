@@ -4,20 +4,30 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\Renderable;
+use App\Repositories\ParticipantRepository;
 use App\Http\Requests\StoreParticipant;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
+use App\Repositories\EventRepository;
+use Illuminate\Support\Facades\Mail;
 use App\Mail\NewParticipant;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Participant;
 use Exception;
-use App\Event;
 use App\User;
 
 class ParticipantController extends Controller
 {
+    private $participantRepository;
+    private $eventRepository;
+
+    public function __construct(ParticipantRepository $participantRepository, EventRepository $eventRepository)
+    {
+        $this->participantRepository = $participantRepository;
+        $this->eventRepository = $eventRepository;
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -25,7 +35,7 @@ class ParticipantController extends Controller
      */
     public function index(): Renderable
     {
-        $participants = Participant::paginate(10);
+        $participants = $this->participantRepository->paginate(10);
 
         return view('participant.participants', compact(['participants']));
     }
@@ -35,7 +45,8 @@ class ParticipantController extends Controller
      */
     public function create()
     {
-        $events = Event::all();
+        $events = $this->eventRepository->all();
+
         return view('participant.create', compact(['events']));
     }
 
@@ -46,13 +57,7 @@ class ParticipantController extends Controller
      */
     public function store(StoreParticipant $request): RedirectResponse
     {
-        $event_id = Event::find($request->input('event_id'))->id;
-        $participant = Participant::create([
-            'name'     => $request->input('name'),
-            'surname'  => $request->input('surname'),
-            'email'    => $request->input('email'),
-            'event_id' => $event_id,
-        ]);
+        $participant = $this->participantRepository->create($request->input());
 
         $user = User::first();
         Mail::to($user)->queue(new NewParticipant($participant));
@@ -67,7 +72,8 @@ class ParticipantController extends Controller
      */
     public function edit(Participant $participant)
     {
-        $events = Event::all();
+        $events = $this->eventRepository->all();
+
         return view('participant.edit', compact('participant', 'events'));
     }
 
@@ -79,15 +85,7 @@ class ParticipantController extends Controller
      */
     public function update(Participant $participant, Request $request)
     {
-        $event_id = Event::find($request->input('event_id'))->id;
-        $participant->fill([
-            'name'     => $request->input('name'),
-            'surname'  => $request->input('surname'),
-            'email'    => $request->input('email'),
-            'event_id' => $event_id
-        ]);
-
-        $participant->save();
+        $participant = $this->participantRepository->update($participant, $request->input());
 
         return view('participant.show', compact(['participant']));
     }
@@ -100,7 +98,7 @@ class ParticipantController extends Controller
      */
     public function delete(Participant $participant): RedirectResponse
     {
-        $participant->delete();
+        $this->participantRepository->delete($participant->id);
 
         return redirect()->route('participants');
     }

@@ -37,9 +37,9 @@ class StoreParticipant extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => 'A email is required',
-            'email.unique'   => 'A email is unique',
-            'name.required'  => 'A name is required',
+            'email.required' => 'Such email is required',
+            'email.unique'   => 'Such email already exists',
+            'name.required'  => 'Such name is required',
         ];
     }
 }

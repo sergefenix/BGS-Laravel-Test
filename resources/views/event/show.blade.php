@@ -37,9 +37,6 @@
                                     Email: {{$participant->email}}</li>
                             @endforeach
                         </ul>
-                        <div class="d-flex justify-content-center">
-                            {{ $participants->onEachSide(5)->appends(request()->input())->links() }}
-                        </div>
                     </div>
                 </form>
             </div>

@@ -20,7 +20,7 @@
                                 <tr>
                                     <td>{{$city->id}}</td>
                                     <td>{{$city->name}}</td>
-                                    <td>{{$city->count_events()}}</td>
+                                    <td>{{$city->countEvents()}}</td>
                                 </tr>
                             @endforeach
                             </tbody>
