@@ -2,12 +2,30 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\User;
-use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Collection;
+use App\Repositories\UserRepository;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use App\User;
 
 class UserController extends Controller
 {
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * UserController constructor.
+     *
+     * @param UserRepository $userRepository
+     */
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -15,6 +33,18 @@ class UserController extends Controller
      */
     public function index()
     {
-        return  User::all();
+        return  $this->userRepository->all();
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return JsonResponse
+     */
+    public function delete(User $user): JsonResponse
+    {
+        $this->userRepository->delete($user->id);
+
+        return response()->json(null, 204);
     }
 }

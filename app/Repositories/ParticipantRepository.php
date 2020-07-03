@@ -36,7 +36,7 @@ class ParticipantRepository extends BaseRepository
      *
      * @return mixed
      */
-    public function update(Participant $participant, array $data)
+    public function update(Participant $participant, array $data): Participant
     {
         $participant->fill([
             'name'     => $data['name'],
@@ -45,6 +45,8 @@ class ParticipantRepository extends BaseRepository
             'event_id' => $data['event_id']
         ]);
 
-        return $participant->save();
+        $participant->save();
+
+        return $participant;
     }
 }

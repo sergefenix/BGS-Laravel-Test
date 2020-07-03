@@ -4,11 +4,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
+use App\Repositories\UserRepository;
 use Exception;
 use App\User;
 
 class UserController extends Controller
 {
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * UserController constructor.
+     *
+     * @param UserRepository $userRepository
+     */
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -16,7 +32,7 @@ class UserController extends Controller
      */
     public function index(): Renderable
     {
-        $users = User::paginate(10);
+        $users = $this->userRepository->paginate(10);
 
         return view('users', compact(['users']));
     }
@@ -29,7 +45,7 @@ class UserController extends Controller
      */
     public function delete(User $user): RedirectResponse
     {
-        $user->delete();
+        $this->userRepository->delete($user->id);
 
         return redirect()->route('users');
     }

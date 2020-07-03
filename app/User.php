@@ -36,6 +36,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * @return mixed|string
+     */
     public function generateToken()
     {
         $this->api_token = str_random(60);

@@ -2,14 +2,14 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
 use App\Participant;
+use Tests\TestCase;
 use App\Event;
 
 class ParticipantTest extends TestCase
 {
 
-    public function testsArticlesAreCreatedCorrectly(): void
+    public function testsParticipantsAreCreatedCorrectly(): void
     {
         $headers = ['Authorization' => "Bearer $this->token"];
 
@@ -30,7 +30,7 @@ class ParticipantTest extends TestCase
             ]);
     }
 
-    public function testArticlesAreUniqEmail(): void
+    public function testParticipantsAreUniqEmail(): void
     {
         $headers = ['Authorization' => "Bearer $this->token"];
 
@@ -52,9 +52,10 @@ class ParticipantTest extends TestCase
             ]);
     }
 
-    public function testsArticlesAreUpdatedCorrectly(): void
+    public function testsParticipantsAreUpdatedCorrectly(): void
     {
         $headers = ['Authorization' => "Bearer $this->token"];
+
         $participant = factory(Participant::class)->create([
             'name'     => 'Name Two',
             'surname'  => 'Surname Two',
@@ -80,7 +81,7 @@ class ParticipantTest extends TestCase
             ]);
     }
 
-    public function testsArtilcesAreDeletedCorrectly(): void
+    public function testsParticipantAreDeletedCorrectly(): void
     {
         $headers = ['Authorization' => "Bearer $this->token"];
         $participant = factory(Participant::class)->create([
@@ -94,7 +95,7 @@ class ParticipantTest extends TestCase
             ->assertStatus(204);
     }
 
-    public function testArticlesAreListedCorrectly(): void
+    public function testParticipantsAreListedCorrectly(): void
     {
         factory(Participant::class)->create([
             'name'     => 'Name Fore',

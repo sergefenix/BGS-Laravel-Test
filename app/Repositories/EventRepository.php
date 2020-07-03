@@ -34,7 +34,7 @@ class EventRepository extends BaseRepository
      *
      * @return mixed
      */
-    public function update(Event $event, array $data)
+    public function update(Event $event, array $data): Event
     {
         $event->fill([
             'name'       => $data['name'],
@@ -42,6 +42,8 @@ class EventRepository extends BaseRepository
             'city_id'    => $data['city_id']
         ]);
 
-        return $event->save();
+        $event->save();
+
+        return $event;
     }
 }

@@ -33,13 +33,15 @@ class CityRepository extends BaseRepository
      *
      * @return mixed
      */
-    public function update(City $city, array $data)
+    public function update(City $city, array $data): City
     {
         $city->fill([
             'name' => $data['name'],
         ]);
 
-        return $city->save();
+        $city->save();
+
+        return $city;
     }
 
 }

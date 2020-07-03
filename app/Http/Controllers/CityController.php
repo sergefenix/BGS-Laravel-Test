@@ -7,8 +7,16 @@ use Illuminate\Contracts\Support\Renderable;
 
 class CityController extends Controller
 {
+    /**
+     * @var CityRepository
+     */
     private $cityRepository;
 
+    /**
+     * CityController constructor.
+     *
+     * @param CityRepository $cityRepository
+     */
     public function __construct(CityRepository $cityRepository)
     {
         $this->cityRepository = $cityRepository;

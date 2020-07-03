@@ -8,7 +8,10 @@ class City extends Model
 {
     protected $fillable = ['name'];
 
-    public function countEvents()
+    /**
+     * @return int
+     */
+    public function countEvents(): int
     {
         return Event::where('city_id', $this->id)->count() ?? 0;
     }

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Contracts\Foundation\Application;
-use App\Repositories\ParticipantRepository;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Collection;
+use App\Repositories\ParticipantRepository;
 use App\Http\Requests\StoreParticipant;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -21,9 +21,16 @@ use App\User;
 
 class ParticipantController extends Controller
 {
+    /**
+     * @var ParticipantRepository
+     */
     private $participantRepository;
-    private $eventRepository;
 
+    /**
+     * ParticipantController constructor.
+     *
+     * @param ParticipantRepository $participantRepository
+     */
     public function __construct(ParticipantRepository $participantRepository)
     {
         $this->participantRepository = $participantRepository;

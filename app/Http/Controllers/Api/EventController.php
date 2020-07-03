@@ -13,9 +13,22 @@ use App\Event;
 class EventController extends Controller
 {
 
+    /**
+     * @var EventRepository
+     */
     private $eventRepository;
+
+    /**
+     * @var ParticipantRepository
+     */
     private $participantRepository;
 
+    /**
+     * EventController constructor.
+     *
+     * @param EventRepository       $eventRepository
+     * @param ParticipantRepository $participantRepository
+     */
     public function __construct(EventRepository $eventRepository, ParticipantRepository $participantRepository)
     {
         $this->eventRepository = $eventRepository;

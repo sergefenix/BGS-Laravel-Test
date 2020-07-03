@@ -19,9 +19,22 @@ use App\User;
 
 class ParticipantController extends Controller
 {
+    /**
+     * @var ParticipantRepository
+     */
     private $participantRepository;
+
+    /**
+     * @var EventRepository
+     */
     private $eventRepository;
 
+    /**
+     * ParticipantController constructor.
+     *
+     * @param ParticipantRepository $participantRepository
+     * @param EventRepository       $eventRepository
+     */
     public function __construct(ParticipantRepository $participantRepository, EventRepository $eventRepository)
     {
         $this->participantRepository = $participantRepository;

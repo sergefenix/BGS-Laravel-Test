@@ -17,7 +17,12 @@ class Event extends Model
         return $this->hasOne(City::class);
     }
 
-    public function getCityIdAttribute($id)
+    /**
+     * @param $id
+     *
+     * @return string
+     */
+    public function getCityIdAttribute($id): string
     {
         return City::find($id) ? City::find($id)->name : '';
     }
