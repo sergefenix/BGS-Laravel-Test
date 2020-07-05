@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Event extends Model
 {
-    protected $fillable = ['name', 'date_start'];
+    protected $fillable = ['name', 'date_start', 'city_id'];
 
     /**
      * @return HasOne

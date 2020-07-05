@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Participant extends Model
 {
     protected $fillable = [
-        'name', 'email', 'surname', 'event_id'
+        'name',
+        'email',
+        'surname',
+        'event_id'
     ];
 
     /**

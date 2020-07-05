@@ -22,20 +22,30 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', [RegisterController::class, 'register'])->middleware('guest');
 Route::post('login', [LoginController::class, 'login'])->middleware('guest');
 
-Route::group(['middleware' => 'auth:api'], static function () {
+Route::group(
+    ['middleware' => 'auth:api'],
+    static function () {
+        Route::post('logout', [LoginController::class, 'logout']);
 
-    Route::post('logout', [LoginController::class, 'logout']);
+        Route::get('cities', [CityController::class, 'index']);
+        Route::get('users', [UserController::class, 'index']);
 
-    Route::get('cities', [CityController::class, 'index']);
-    Route::get('users', [UserController::class, 'index']);
+        Route::prefix('events')->group(
+            function () {
+                Route::get('/', [EventController::class, 'index']);
+                Route::get('{event}/show', [EventController::class, 'show']);
+                Route::delete('{event}/delete', [EventController::class, 'delete']);
+            }
+        );
 
-    Route::get('events', [EventController::class, 'index']);
-    Route::get('events/{event}/show', [EventController::class, 'show']);
-    Route::delete('events/{event}/delete', [EventController::class, 'delete']);
-
-    Route::get('participants', [ParticipantController::class, 'index']);
-    Route::post('participants/store', [ParticipantController::class, 'store']);
-    Route::post('participants/{participant}/update', [ParticipantController::class, 'update']);
-    Route::delete('participants/{participant}/delete', [ParticipantController::class, 'delete']);
-    Route::get('participants/{participant}/show', [ParticipantController::class, 'show']);
-});
+        Route::prefix('participants')->group(
+            function () {
+                Route::get('/', [ParticipantController::class, 'index']);
+                Route::post('store', [ParticipantController::class, 'store']);
+                Route::post('{participant}/update', [ParticipantController::class, 'update']);
+                Route::delete('{participant}/delete', [ParticipantController::class, 'delete']);
+                Route::get('{participant}/show', [ParticipantController::class, 'show']);
+            }
+        );
+    }
+);

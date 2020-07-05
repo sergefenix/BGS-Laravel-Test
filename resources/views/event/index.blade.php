@@ -4,6 +4,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-12">
+                <a href="{{ route('events.create') }}">
+                    <button type="button" class="btn btn-primary">Create</button>
+                </a><br><br>
                 <div class="card">
                     <div class="card-header">Events</div>
                     <div class="content">

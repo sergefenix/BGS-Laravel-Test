@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\View\Factory;
+use App\Repositories\EventRepository;
 use Illuminate\Http\RedirectResponse;
 use App\Repositories\CityRepository;
 use Illuminate\Http\Request;
@@ -19,13 +20,20 @@ class CityController extends Controller
     private $cityRepository;
 
     /**
+     * @var EventRepository
+     */
+    private $eventRepository;
+
+    /**
      * CityController constructor.
      *
-     * @param CityRepository $cityRepository
+     * @param CityRepository  $cityRepository
+     * @param EventRepository $eventRepository
      */
-    public function __construct(CityRepository $cityRepository)
+    public function __construct(CityRepository $cityRepository, EventRepository $eventRepository)
     {
         $this->cityRepository = $cityRepository;
+        $this->eventRepository = $eventRepository;
     }
 
     /**
@@ -45,7 +53,7 @@ class CityController extends Controller
      */
     public function create(): Renderable
     {
-        return view('cities.create', compact(['events']));
+        return view('cities.create');
     }
 
     /**
@@ -90,7 +98,9 @@ class CityController extends Controller
      */
     public function show(City $city): Renderable
     {
-        return view('cities.show', compact(['city']));
+        $events = $this->eventRepository->where('city_id', $city->id);
+
+        return view('cities.show', compact(['city', 'events']));
     }
 
     /**
